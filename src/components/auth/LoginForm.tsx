@@ -1,11 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginSchema } from "@/schemas/auth";
-import { loginRequest } from "@/services/authService";
-import { loginAction } from "@/lib/actions";
 
 import {
   Form,
@@ -19,9 +16,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 export function LoginForm() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { login, isLoading } = useAuth();
   const router = useRouter();
 
   const form = useForm<LoginSchema>({
@@ -30,33 +28,22 @@ export function LoginForm() {
   });
 
   const onSubmit = async (values: LoginSchema) => {
-    setIsLoading(true);
-    try {
-      const { access, refresh } = await loginRequest(
-        values.username,
-        values.password
-      );
+    const result = await login(values.username, values.password);
 
-      await loginAction(access, refresh);
-
-      form.reset();
-
+    if (result.success) {
       toast.success("¡Bienvenido!", {
         description: "Has iniciado sesión correctamente",
         duration: 3000,
       });
-
       router.push("/profile");
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error("¡Upps! Error al iniciar sesión", {
-          description: error.message,
-          duration: 4000,
-        });
-      }
-      form.setValue("password", "");
-    } finally {
-      setIsLoading(false);
+    } else {
+      toast.error("Error al iniciar sesión", {
+        description:
+          result.error instanceof Error
+            ? result.error.message
+            : "Ocurrió un error",
+        duration: 4000,
+      });
     }
   };
 
