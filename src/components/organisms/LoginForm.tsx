@@ -2,18 +2,16 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 import { loginSchema, LoginSchema } from "@/schemas/auth";
-import { useAuth } from "@/hooks/useAuth";
+import { useLoginForm } from "@/hooks/useLoginForm";
 import { Form } from "@/components/atoms/form";
 import { Button } from "@/components/atoms/button";
+
 import { FormTextField } from "../molecules/FormTextField";
 
 export function LoginForm() {
-  const { login, isLoading } = useAuth();
-  const router = useRouter();
+  const { login, isLoading } = useLoginForm();
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -23,24 +21,8 @@ export function LoginForm() {
     },
   });
 
-  const onSubmit = async (values: LoginSchema) => {
-    const result = await login(values.username, values.password);
-
-    if (result.success) {
-      toast.success("¡Bienvenido!", {
-        description: "Has iniciado sesión correctamente",
-        duration: 3000,
-      });
-      router.push("/profile");
-    } else {
-      toast.error("Error al iniciar sesión", {
-        description:
-          result.error instanceof Error
-            ? result.error.message
-            : "Ocurrió un error",
-        duration: 4000,
-      });
-    }
+  const onSubmit: (values: LoginSchema) => Promise<void> = async (values) => {
+    await login(values.username, values.password);
   };
 
   return (
