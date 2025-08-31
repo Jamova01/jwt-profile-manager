@@ -4,23 +4,18 @@ import { toast } from "sonner";
 
 import { loginRequest } from "@/services/auth";
 import { loginAction } from "@/lib/actions";
-import { LoginResponse } from "@/types/auth";
+import type { LoginResponse } from "@/types/auth";
+import type { LoginSchema } from "@/schemas/auth";
 
-export function useLoginForm(): {
-  login: (username: string, password: string) => Promise<void>;
-  isLoading: boolean;
-} {
+export function useLoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const login = async (username: string, password: string) => {
+  const onSubmit = async (values: LoginSchema): Promise<void> => {
     setIsLoading(true);
 
     try {
-      const { access, refresh }: LoginResponse = await loginRequest({
-        username,
-        password,
-      });
+      const { access, refresh }: LoginResponse = await loginRequest(values);
 
       await loginAction(access, refresh);
 
@@ -31,11 +26,10 @@ export function useLoginForm(): {
 
       router.push("/profile");
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Ocurrió un error";
+      console.error("Login error:", error);
 
       toast.error("Error al iniciar sesión", {
-        description: message,
+        description: "No se pudo iniciar sesión, intenta más tarde.",
         duration: 4000,
       });
     } finally {
@@ -43,5 +37,5 @@ export function useLoginForm(): {
     }
   };
 
-  return { login, isLoading };
+  return { onSubmit, isLoading };
 }
