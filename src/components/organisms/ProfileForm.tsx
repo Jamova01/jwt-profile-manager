@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-import { profileSchema, ProfileFormValues } from "@/schemas/profile";
-
-import { updateProfile } from "@/services/profile";
-import { initials } from "@/lib/helpers";
 import { toast } from "sonner";
 
+import { logoutAction } from "@/lib/actions";
+import { updateProfile } from "@/services/profile";
+import { initials } from "@/lib/helpers";
+
+import { profileSchema, ProfileFormValues } from "@/schemas/profile";
 import { ProfileApiResponse } from "@/types/profile";
 
 import {
@@ -34,6 +35,8 @@ import { ProfilePhotoForm } from "@/components/molecules/ProfilePhotoForm";
 
 export function ProfileForm({ profile }: { profile: ProfileApiResponse }) {
   const [loading, setLoading] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const router = useRouter();
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -71,6 +74,16 @@ export function ProfileForm({ profile }: { profile: ProfileApiResponse }) {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    try {
+      await logoutAction();
+      router.push("/login");
+    } finally {
+      setLoggingOut(false);
     }
   };
 
@@ -279,7 +292,16 @@ export function ProfileForm({ profile }: { profile: ProfileApiResponse }) {
             </CardContent>
           </Card>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-4">
+            <Button
+              type="button"
+              variant="destructive"
+              className="px-6 py-2"
+              onClick={handleLogout}
+              disabled={loggingOut}
+            >
+              {loggingOut ? "Cerrando sesión..." : "Cerrar sesión"}
+            </Button>
             <Button type="submit" className="px-6 py-2" disabled={loading}>
               {loading ? "Guardando..." : "Guardar cambios"}
             </Button>
