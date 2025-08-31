@@ -32,9 +32,7 @@ export function useLoginSubmit() {
       });
 
       router.push("/profile");
-    } catch (error) {
-      console.error("Login error:", error);
-
+    } catch {
       toast.error("Error al iniciar sesión", {
         description: "No se pudo iniciar sesión, intenta más tarde.",
         duration: 4000,
