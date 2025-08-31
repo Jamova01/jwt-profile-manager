@@ -2,12 +2,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { loginRequest } from "@/services/auth";
 import { loginAction } from "@/lib/actions";
 import type { LoginResponse } from "@/types/auth";
 import { loginSchema, type LoginSchema } from "@/schemas/auth";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 export function useLoginSubmit() {
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +24,6 @@ export function useLoginSubmit() {
 
     try {
       const { access, refresh }: LoginResponse = await loginRequest(values);
-
       await loginAction(access, refresh);
 
       toast.success("¡Bienvenido!", {
