@@ -13,16 +13,7 @@ import { initials } from "@/lib/helpers";
 import { profileSchema, ProfileFormValues } from "@/schemas/profile";
 import { ProfileApiResponse } from "@/types/profile";
 
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormControl,
-  FormMessage,
-  FormLabel,
-} from "@/components/atoms/form";
-import { Input } from "@/components/atoms/input";
-import { Textarea } from "@/components/atoms/textarea";
+import { Form } from "@/components/atoms/form";
 import { Button } from "@/components/atoms/button";
 import {
   Card,
@@ -32,6 +23,8 @@ import {
 } from "@/components/atoms/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { ProfilePhotoForm } from "@/components/molecules/ProfilePhotoForm";
+import { FormTextField } from "../molecules/FormTextField";
+import { FormTextareaField } from "../molecules/FormTextareaField";
 
 export function ProfileForm({ profile }: { profile: ProfileApiResponse }) {
   const [loading, setLoading] = useState(false);
@@ -114,31 +107,18 @@ export function ProfileForm({ profile }: { profile: ProfileApiResponse }) {
           </CardHeader>
 
           <CardContent className="space-y-4">
-            <FormField
+            <FormTextField
               control={form.control}
               name="documento"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Documento</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Número de documento" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="Número de documento"
+              label="Documento"
             />
-            <FormField
+
+            <FormTextField
               control={form.control}
               name="telefono"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Teléfono</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="+1 234 567 890" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="Teléfono"
+              label="Teléfono"
             />
           </CardContent>
         </Card>
@@ -149,57 +129,32 @@ export function ProfileForm({ profile }: { profile: ProfileApiResponse }) {
               <CardTitle>Información Personal</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
+              <FormTextField
                 control={form.control}
                 name="user.first_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nombre</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="John" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Nombre"
+                placeholder="John"
               />
-              <FormField
+              <FormTextField
                 control={form.control}
                 name="user.last_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Apellido</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Doe" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Apellido"
+                placeholder="Doe"
               />
-              <FormField
+
+              <FormTextField
                 control={form.control}
                 name="user.email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="john.doe@example.com" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Email"
+                placeholder="john.doe@example.com"
               />
-              <FormField
+
+              <FormTextField
                 control={form.control}
                 name="tipo_naturaleza"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Naturaleza</FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Naturaleza"
+                placeholder="natural"
+                disabled={true}
               />
             </CardContent>
           </Card>
@@ -209,22 +164,11 @@ export function ProfileForm({ profile }: { profile: ProfileApiResponse }) {
               <CardTitle>Biografía</CardTitle>
             </CardHeader>
             <CardContent>
-              <FormField
+              <FormTextareaField
                 control={form.control}
                 name="biografia"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Cuéntanos sobre ti</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        placeholder="Escribe una breve bio..."
-                        className="min-h-[120px]"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Cuéntanos sobre ti"
+                className="min-h-[120px]"
               />
             </CardContent>
           </Card>
@@ -234,60 +178,29 @@ export function ProfileForm({ profile }: { profile: ProfileApiResponse }) {
               <CardTitle>Redes Sociales</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
+              <FormTextField
                 control={form.control}
                 name="linkedin"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>LinkedIn</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="https://linkedin.com/in/..."
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="LinkedIn"
+                placeholder="https://linkedin.com/in/..."
               />
-              <FormField
+              <FormTextField
                 control={form.control}
                 name="twitter"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Twitter</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="https://twitter.com/..." />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Twitter"
+                placeholder="https://twitter.com/..."
               />
-              <FormField
+              <FormTextField
                 control={form.control}
                 name="github"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>GitHub</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="https://github.com/..." />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="GitHub"
+                placeholder="https://github.com/..."
               />
-              <FormField
+              <FormTextField
                 control={form.control}
                 name="sitio_web"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Website</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="https://example.com" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Website"
+                placeholder="https://example.com"
               />
             </CardContent>
           </Card>
