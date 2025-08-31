@@ -1,6 +1,6 @@
 "use client";
 
-import { useProfile } from "@/hooks/useProfile";
+import { useProfile } from "@/hooks/profile/useProfile";
 import {
   Card,
   CardContent,
