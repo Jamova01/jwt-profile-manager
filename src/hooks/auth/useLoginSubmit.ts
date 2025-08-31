@@ -5,11 +5,18 @@ import { toast } from "sonner";
 import { loginRequest } from "@/services/auth";
 import { loginAction } from "@/lib/actions";
 import type { LoginResponse } from "@/types/auth";
-import type { LoginSchema } from "@/schemas/auth";
+import { loginSchema, type LoginSchema } from "@/schemas/auth";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export function useLoginSubmit() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  const form = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { username: "", password: "" },
+  });
 
   const onSubmit = async (values: LoginSchema): Promise<void> => {
     setIsLoading(true);
@@ -37,5 +44,5 @@ export function useLoginSubmit() {
     }
   };
 
-  return { onSubmit, isLoading };
+  return { form, onSubmit, isLoading };
 }
