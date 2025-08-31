@@ -4,14 +4,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { loginSchema, LoginSchema } from "@/schemas/auth";
-import { useLoginForm } from "@/hooks/useLoginForm";
+import { useLoginSubmit } from "@/hooks/auth/useLoginSubmit";
 
 import { Form } from "@/components/atoms/form";
 import { Button } from "@/components/atoms/button";
 import { FormTextField } from "../molecules/FormTextField";
 
 export function LoginForm() {
-  const { onSubmit, isLoading } = useLoginForm();
+  const { onSubmit, isLoading } = useLoginSubmit();
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),

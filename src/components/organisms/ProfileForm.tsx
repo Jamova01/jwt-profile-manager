@@ -17,8 +17,8 @@ import { FormTextField } from "../molecules/FormTextField";
 import { FormTextareaField } from "../molecules/FormTextareaField";
 import { FormActions } from "../molecules/FormActions";
 
-import { useProfileSubmit } from "@/hooks/useProfileSubmit";
-import { useLogout } from "@/hooks/useLogout";
+import { useProfileSubmit } from "@/hooks/profile/useProfileSubmit";
+import { useLogout } from "@/hooks/auth/useLogout";
 
 export function ProfileForm({ profile }: { profile: ProfileApiResponse }) {
   const { handleLogout, loggingOut } = useLogout();
