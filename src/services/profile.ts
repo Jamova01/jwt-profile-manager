@@ -1,64 +1,56 @@
 import api from "@/lib/axios";
-import { UserProfile } from "@/types/user";
+import { getSessionAction } from "@/lib/actions";
+import {
+  ProfileApiResponse,
+  UpdateProfileData,
+  UpdateProfileResponse,
+} from "@/types/profile";
 
-export interface UpdateProfilePayload {
-  user: {
-    first_name: string;
-    last_name: string;
-    email: string;
+async function buildAuthHeaders(contentType?: string) {
+  const session = await getSessionAction();
+
+  if (!session?.access) {
+    throw new Error("No session token found");
+  }
+
+  return {
+    Authorization: `Bearer ${session.access}`,
+    ...(contentType && { "Content-Type": contentType }),
   };
-  telefono: string;
-  tipo_usuario: string;
-  tipo_naturaleza: string;
-  biografia?: string;
-  documento: string;
-  linkedin?: string;
-  twitter?: string;
-  github?: string;
-  sitio_web?: string;
-  esta_verificado?: boolean;
+}
+
+export async function getProfile(): Promise<ProfileApiResponse> {
+  const headers = await buildAuthHeaders();
+  const { data } = await api.get<ProfileApiResponse>("/perfil/", { headers });
+  return data;
 }
 
 export async function updateProfile(
-  payload: UpdateProfilePayload
-): Promise<UserProfile> {
-  const { data } = await api.put("/usuario/perfil/", payload, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  payload: Partial<UpdateProfileData>
+): Promise<UpdateProfileData> {
+  const headers = await buildAuthHeaders("application/json");
+  const { data } = await api.put<UpdateProfileResponse>(
+    "/usuario/perfil/",
+    payload,
+    { headers }
+  );
 
-  const profile = data?.data;
-
-  return {
-    user: {
-      username: profile.user.username,
-      first_name: profile.user.first_name,
-      last_name: profile.user.last_name,
-      email: profile.user.email,
-    },
-    telefono: profile.telefono,
-    tipo_usuario: profile.tipo_usuario,
-    tipo_naturaleza: profile.tipo_naturaleza,
-    biografia: profile.biografia,
-    documento: profile.documento,
-    linkedin: profile.linkedin,
-    twitter: profile.twitter,
-    github: profile.github,
-    sitio_web: profile.sitio_web,
-    esta_verificado: profile.esta_verificado,
-  };
+  return data.data;
 }
 
-export async function updateProfilePhoto(foto: File) {
+export async function updateProfilePhoto(
+  foto: File
+): Promise<{ message: string; status: string }> {
+  const headers = await buildAuthHeaders("multipart/form-data");
+
   const formData = new FormData();
   formData.append("foto", foto);
 
-  const { data } = await api.patch("/perfil/foto/", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const { data } = await api.patch<{ message: string; status: string }>(
+    "/perfil/foto/",
+    formData,
+    { headers }
+  );
 
   return data;
 }
