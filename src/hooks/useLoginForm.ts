@@ -17,10 +17,10 @@ export function useLoginForm(): {
     setIsLoading(true);
 
     try {
-      const { access, refresh }: LoginResponse = await loginRequest(
+      const { access, refresh }: LoginResponse = await loginRequest({
         username,
-        password
-      );
+        password,
+      });
 
       await loginAction(access, refresh);
 
