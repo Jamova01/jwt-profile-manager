@@ -7,7 +7,7 @@ import { loginAction } from "@/lib/actions";
 import type { LoginResponse } from "@/types/auth";
 import type { LoginSchema } from "@/schemas/auth";
 
-export function useLoginForm() {
+export function useLoginSubmit() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
